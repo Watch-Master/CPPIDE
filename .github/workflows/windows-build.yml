@@ -13,16 +13,14 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Install Qt6 and WebEngine
-      uses: jurplel/install-qt-action@v4
+    - name: Install Qt6 and WebEngine (Official)
+      # Using the official action managed directly by the Qt Company
+      uses: qt-project/install-qt-action@v1
       with:
-        # Using a highly cached standard minor version to prevent server mismatches
         version: '6.6.3'
-        host: 'windows'
-        target: 'desktop'
         arch: 'win64_mingw'
+        # Explicitly requesting the core modules
         modules: 'qtwebengine'
-        # Remove custom mirrors and let the runner automatically select the healthiest official source
 
     - name: Configure and Compile Project
       shell: bash
@@ -35,8 +33,8 @@ jobs:
     - name: Run Windows Deployment Tool (windeployqt)
       shell: bash
       run: |
-        # Use the standard environment variable to reliably target the bin folder
-        "${{ env.QT_ROOT_DIR }}/bin/windeployqt.exe" --qmldir "${{ env.QT_ROOT_DIR }}/qml" build/CodePlayground.exe
+        # The official action sets IQTA_QT_INSTALL_BIN dynamically
+        "${{ env.IQTA_QT_INSTALL_BIN }}/windeployqt.exe" --qmldir "${{ env.QT_ROOT_DIR }}/qml" build/CodePlayground.exe
 
     - name: Compress Build Directory to ZIP
       shell: bash
