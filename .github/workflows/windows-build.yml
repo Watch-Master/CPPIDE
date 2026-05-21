@@ -2,8 +2,8 @@ name: Build Windows App
 
 on:
   push:
-    branches: [ main, master ] # Triggers the build whenever you push to main or master
-  workflow_dispatch: # Allows you to manually trigger the build from the website
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -16,35 +16,30 @@ jobs:
     - name: Install Qt6 and WebEngine
       uses: jurplel/install-qt-action@v3
       with:
-        version: '6.6.3' # Matches standard stable Qt6 releases
+        version: '6.6.3'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_mingw' # Compiles a 64-bit Windows binary using MinGW
-        modules: 'qtwebengine' # Explicitly injects the massive Chromium engine components
+        arch: 'win64_mingw'
+        modules: 'qtwebengine'
 
-    - name: Set up CMake
-      uses: jwlawrence/actions-setup-cmake@v1
+    # Note: Removed the explicit setup-cmake action since windows-latest has it out of the box!
 
     - name: Configure and Compile Project
       shell: bash
       run: |
         mkdir build
         cd build
-        # Configure the project in Release mode
         cmake -DCMAKE_BUILD_TYPE=Release ..
-        # Build the executable
         cmake --build . --config Release
 
     - name: Run Windows Deployment Tool (windeployqt)
       shell: bash
       run: |
-        # Use windeployqt to automatically copy all required .dll files and QML assets
         windeployqt --qmldir "${{ env.Qt6_DIR }}/qml" build/Release/CodePlayground.exe
 
     - name: Compress Build Directory to ZIP
       shell: bash
       run: |
-        # Bundle the exe and all its freshly injected dependencies into a portable archive
         powershell Compress-Archive -Path build/Release/* -DestinationPath CodePlayground-Windows-x86_64.zip
 
     - name: Upload Finished Artifact
