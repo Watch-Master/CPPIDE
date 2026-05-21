@@ -1,0 +1,5 @@
+/home/sohamwm/Desktop/PY_and_HTML_Apps/CPPIDE/build/CMakeFiles/CodePlayground.dir
+/home/sohamwm/Desktop/PY_and_HTML_Apps/CPPIDE/build/CMakeFiles/edit_cache.dir
+/home/sohamwm/Desktop/PY_and_HTML_Apps/CPPIDE/build/CMakeFiles/rebuild_cache.dir
+/home/sohamwm/Desktop/PY_and_HTML_Apps/CPPIDE/build/CMakeFiles/CodePlayground_autogen_timestamp_deps.dir
+/home/sohamwm/Desktop/PY_and_HTML_Apps/CPPIDE/build/CMakeFiles/CodePlayground_autogen.dir
