@@ -13,14 +13,17 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Install Qt6 and WebEngine (Official)
-      # Using the official action managed directly by the Qt Company
-      uses: qt-project/install-qt-action@v1
+    - name: Install Qt6 and WebEngine
+      uses: jurplel/install-qt-action@v4
       with:
         version: '6.6.3'
+        host: 'windows'
+        target: 'desktop'
         arch: 'win64_mingw'
-        # Explicitly requesting the core modules
         modules: 'qtwebengine'
+        # Crucial Fix: Force safe installer versions that work smoothly on Python 3.12+
+        aqtversion: '==3.1.11'
+        py7zrversion: '==0.20.8'
 
     - name: Configure and Compile Project
       shell: bash
@@ -33,8 +36,8 @@ jobs:
     - name: Run Windows Deployment Tool (windeployqt)
       shell: bash
       run: |
-        # The official action sets IQTA_QT_INSTALL_BIN dynamically
-        "${{ env.IQTA_QT_INSTALL_BIN }}/windeployqt.exe" --qmldir "${{ env.QT_ROOT_DIR }}/qml" build/CodePlayground.exe
+        # Pull the tool from the clean environment variable location
+        "${{ env.QT_ROOT_DIR }}/bin/windeployqt.exe" --qmldir "${{ env.QT_ROOT_DIR }}/qml" build/CodePlayground.exe
 
     - name: Compress Build Directory to ZIP
       shell: bash
